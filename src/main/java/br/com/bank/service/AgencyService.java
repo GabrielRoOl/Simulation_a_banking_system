@@ -20,11 +20,23 @@ public class AgencyService {
 
     public void register(Agency agency){
         HttpAgency httpAgency = registerStatus.searchByCnpj(agency.getCnpj());
-        if(httpAgency.getRegisterStatus().equals(RegisterStatus.ACTIVE)){
+        if(httpAgency != null && httpAgency.getRegisterStatus().equals(RegisterStatus.ACTIVE)){
             agencyList.add(agency);
         }else {
             throw new AgencyNotFoundOrNotActiveExcetion();
         }
     }
 
+    public Agency findById(Integer id){
+        return agencyList.stream().filter(a -> a.getId().equals(id)).toList().getFirst();
+    }
+
+    public void delet(Integer id){
+        agencyList.removeIf(a -> a.getId().equals(id));
+    }
+
+    public void update(Agency agency){
+        delet(agency.getId());
+        register(agency);
+    }
 }
